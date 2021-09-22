@@ -23,7 +23,7 @@ function App() {
       <div className="App">
         <h1>Apollo client</h1>
         <Courses />
-        <AddCourse />
+        {/* <AddCourse /> */}
       </div>
 
     </ApolloProvider>

@@ -6,6 +6,13 @@ import { useQuery, gql,useMutation } from '@apollo/client';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 interface Course{
     courseId:any;
@@ -17,23 +24,23 @@ interface CourseData{
     allCourses:Course[];
 }
 
-// interface NewCourse{
-//     courseId:string;
-//     courseName:string;
-//     courseLeader:string;
-// }
+interface NewCourse{
+    courseId:string;
+    courseName:string;
+    courseLeader:string;
+}
 
-// interface NewCourseData{
-//     createCourse:NewCourse[];
-// }
+interface NewCourseData{
+    createCourse:NewCourse[];
+}
 
-// interface NewCourseVars{
-//     courseInput :{
-//         courseId:string;
-//         courseName:string;
-//         courseLeader:string;
-//     }
-// }
+interface NewCourseVars{
+    courseInput :{
+        courseId:string;
+        courseName:string;
+        courseLeader:string;
+    }
+}
 
 const GET_ALL_COURSES = gql`
 query{
@@ -56,15 +63,17 @@ mutation createCourse($courseInput:CourseInput){
   }
 `;
 
+
+
 function Courses(){
-    const {loading,error,data} = useQuery<CourseData>(GET_ALL_COURSES);
+    const {loading,error,data,refetch} = useQuery<CourseData>(GET_ALL_COURSES);
 
-    // const [courseId, setId] = useState('');
-    // const [courseName, setName] = useState('');
-    // const [courseLeader, setLeader] = useState('');
+    const [courseId, setId] = useState('');
+    const [courseName, setName] = useState('');
+    const [courseLeader, setLeader] = useState('');
 
-    // const [createCourse] = useMutation<{createCourse:NewCourseData,course:NewCourseVars}>
-    // (ADD_COURSE,{variables: { course: { courseId, courseName, courseLeader } },refetchQueries :["allCourses"]});
+    const [createCourse] = useMutation<{createCourse:NewCourseData,course:NewCourseVars}>
+    (ADD_COURSE,{variables: { courseInput: { courseId, courseName, courseLeader } },refetchQueries :["allCourses"]});
 
     // const handleAddCourses =(e : any)=>{
     //     e.preventDefault();
@@ -87,7 +96,7 @@ function Courses(){
         <div>
             <div >
             <h3>Courses List</h3>
-            <table style={{marginLeft:450,}}>
+            {/* <table style={{marginLeft:450,}}>
                 <thead>
                     <tr>
                          <th key="{course.courseId}">Course Id</th>
@@ -106,7 +115,32 @@ function Courses(){
                     ))}
                     
                 </tbody>
-            </table>
+            </table> */}
+            <TableContainer component={Paper}>
+            <Table size="small"  aria-label="a dense table">
+                <TableHead>
+                <TableRow>
+                    <TableCell align="right">Course Id</TableCell>
+                    <TableCell align="right">Course Name</TableCell>
+                    <TableCell align="right">Course Leader</TableCell>
+                    <TableCell align="right">Update</TableCell>
+                    <TableCell align="right">Delete</TableCell>
+                </TableRow>
+                </TableHead>
+                <TableBody>
+                {data && data.allCourses.map((course) => (
+                    <TableRow>
+                        <TableCell align="right">{course.courseId}</TableCell>
+                        <TableCell align="right">{course.courseName}</TableCell>
+                        <TableCell align="right">{course.courseName}</TableCell>
+                        <TableCell align="right"><Button variant="contained" color="info">Update</Button></TableCell>
+                        <TableCell align="right"><Button variant="contained" color="warning">Delete</Button></TableCell>
+
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
             </div>
             
             <div>
@@ -114,7 +148,7 @@ function Courses(){
                     Add Course
                 </h3>
                 
-                {/* <form >
+                <form >
                     <Box  component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' },
                 }} noValidate autoComplete="off">
 
@@ -123,22 +157,20 @@ function Courses(){
                     <TextField id="outlined-basic" label="Course Leader" value={courseLeader} onChange ={(e)=>setLeader(e.target.value)} variant="outlined" />
 
                     <br />
-                    <Button type="submit" variant="contained" color="secondary" onClick={handleAddCourses}
+                    <Button type="submit" variant="contained" color="secondary"
+                     onClick={()=>{
+                        createCourse({ variables:{courseInput:{courseId,courseName,courseLeader}}});
+                        refetch();
+                            }
+                        } 
                     style={{marginTop:5}}>
                             Save
                     </Button>
                     
                 </Box>
                     
-                </form> */}
+                </form>
 
-                {/* <Button  variant="contained" color="secondary" style={{marginTop:5}}>
-                        Update
-                    </Button>
-                    <Button  variant="contained" color="secondary" style={{marginTop:5}}>
-                        Delete
-                    </Button> */}
-                
                 
 
             </div>
