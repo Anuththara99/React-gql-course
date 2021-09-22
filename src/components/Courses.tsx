@@ -1,7 +1,4 @@
 import React ,{ useEffect, useState } from 'react'
-// import {Query} from 'react-apollo';
-// import gql from 'graphql-tag';
-// import { render } from 'react-dom';
 import { useQuery, gql,useMutation } from '@apollo/client'; 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -15,7 +12,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { PlayDisabled } from '@mui/icons-material';
 
 interface Course{
     courseId:any;

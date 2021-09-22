@@ -4,10 +4,6 @@ import './App.css';
 import { ApolloClient,ApolloProvider,HttpLink,InMemoryCache } from '@apollo/client';
 import Courses from './components/Courses';
 
-// //apollo client setup 
-// const client = new ApolloClient({
-//   uri:'http://localhost:4000/graphql'
-// });
 
 //apollo client setup 
 const client = new ApolloClient({
