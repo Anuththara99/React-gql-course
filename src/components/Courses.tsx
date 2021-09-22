@@ -13,6 +13,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { PlayDisabled } from '@mui/icons-material';
 
 interface Course{
     courseId:any;
@@ -150,13 +153,15 @@ function Courses(){
                         <TableCell align="right">{course.courseLeader}</TableCell>
                         {/* Delete Button */}
                         <TableCell align="right">
-                            <Button variant="contained" color="warning" 
+                            <IconButton aria-label="delete"
+                           
                             onClick={()=>{deleteCourse({variables:{courseId:course.courseId}});
                             refetch();
                                 }
                             }>
-                                Delete
-                            </Button>
+                                <DeleteIcon/>
+                                
+                            </IconButton>
                             
                         </TableCell>
 
