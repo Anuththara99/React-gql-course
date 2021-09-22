@@ -4,18 +4,6 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { gql, useMutation } from '@apollo/client'; 
 
-// interface Course{
-//     courseId:any;
-//     courseName:string;
-//     courseLeader:string;
-// }
-
-
-// interface inputField{
-//     courseId:string;
-//     courseName:string;
-//     courseLeader:string;
-// }
 
 interface NewCourse{
     courseId:string;
@@ -58,26 +46,12 @@ query{
 
 function AddCourse(){
 
-    // const [inputField,setInputField] = useState({
-    //     courseId:'',
-    //     courseName:'',
-    //     courseLeader:''
-    // })
+   
 
     //Create Course States
     const [courseId, setId] = useState('');
     const [courseName, setName] = useState('');
     const [courseLeader, setLeader] = useState('');
-
-    // const inputHandler = (e :any)=>{
-    //     setInputField({
-    //         ...inputField,[e.target.courseId]:e.target.value
-    //     })
-    // }
-
-    // const formSubmit =()=>{
-    //     console.log(inputField)
-    // }
 
 
     const [createCourse,{ error,data}] = useMutation<{createCourse :NewCourseData,courseInput :NewCourseVars}>
@@ -114,9 +88,6 @@ function AddCourse(){
                 <Box  component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' },
         }} noValidate autoComplete="off">
 
-                {/* <TextField id="outlined-basic" label="Course Id" value={inputField.courseId} onChange ={inputHandler} variant="outlined" />
-                <TextField id="outlined-basic" label="Course Name" value={inputField.courseName} onChange ={inputHandler} variant="outlined" />
-                <TextField id="outlined-basic" label="Course Leader" value={inputField.courseLeader} onChange ={inputHandler} variant="outlined" /> */}
 
                 <TextField id="outlined-basic" label="Course Id" value={courseId} onChange ={(e)=>setId(e.target.value)} variant="outlined" />
                 <TextField id="outlined-basic" label="Course Name" value={courseName} onChange ={(e)=>setName(e.target.value)} variant="outlined" />
