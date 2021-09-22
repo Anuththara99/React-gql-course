@@ -54,6 +54,11 @@ interface UpdateCourseVars{
     }
 }
 
+interface DeleteId{
+    courseId:string
+}
+
+
 //View all Courses Query
 const GET_ALL_COURSES = gql`
 query{
@@ -67,7 +72,6 @@ query{
 `;
 
 //Create new Course Mutation
-
 const ADD_COURSE = gql`
 mutation createCourse($courseInput:CourseInput){
     createCourse(courseInput: $courseInput){
@@ -89,24 +93,35 @@ mutation($courseUpdateInput:CourseUpdateInput){
   }
 `;
 
+//delete course Mutation
+const DELETE_COURSE = gql`
+mutation($courseId: ID){
+    deleteCourse(courseId: $courseId)
+  }
+`;
+
 
 
 function Courses(){
-    //for get view all courses
+    // get view all courses
     const {loading,error,data,refetch} = useQuery<CourseData>(GET_ALL_COURSES);
 
+    //Create Course States
     const [courseId, setId] = useState('');
     const [courseName, setName] = useState('');
     const [courseLeader, setLeader] = useState('');
 
-    //for create new course
+    // create new course
     const [createCourse] = useMutation<{createCourse:NewCourseData,courseInput:NewCourseVars}>
     (ADD_COURSE,{variables: { courseInput: { courseId, courseName, courseLeader } },refetchQueries :["allCourses"]});
 
-    //for update course
+    // update course
     const [updateCourse] = useMutation<{updateCourse:UpdateCourseData,courseUpdateInput:UpdateCourseVars}>
     (UPDATE_COURSE,{variables: { courseUpdateInput: { courseId, courseName, courseLeader } },refetchQueries :["allCourses"]})
 
+    //delete course
+    const [deleteCourse] = useMutation<{courseId:DeleteId}>
+    (DELETE_COURSE,{variables:{courseId:courseId},refetchQueries :["allCourses"]})
 
     if(loading) return <p>loading...</p>;
     if(error) return <p>Error..</p>;
@@ -121,10 +136,10 @@ function Courses(){
             <Table size="small"  aria-label="a dense table">
                 <TableHead>
                 <TableRow>
-                    <TableCell align="right">Course Id</TableCell>
-                    <TableCell align="right">Course Name</TableCell>
-                    <TableCell align="right">Course Leader</TableCell>
-                    <TableCell align="right">Delete</TableCell>
+                    <TableCell align="right">COURSE ID</TableCell>
+                    <TableCell align="right">COURSE NAME</TableCell>
+                    <TableCell align="right">COURSE LEADER</TableCell>
+                    <TableCell align="right"></TableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
@@ -133,10 +148,17 @@ function Courses(){
                         <TableCell align="right">{course.courseId}</TableCell>
                         <TableCell align="right">{course.courseName}</TableCell>
                         <TableCell align="right">{course.courseLeader}</TableCell>
-                        {/* <TableCell align="right">
+                        {/* Delete Button */}
+                        <TableCell align="right">
+                            <Button variant="contained" color="warning" 
+                            onClick={()=>{deleteCourse({variables:{courseId:course.courseId}});
+                            refetch();
+                                }
+                            }>
+                                Delete
+                            </Button>
                             
-                        </TableCell> */}
-                        <TableCell align="right"><Button variant="contained" color="warning">Delete</Button></TableCell>
+                        </TableCell>
 
                     </TableRow>
                 ))}
@@ -158,6 +180,7 @@ function Courses(){
                     <TextField id="outlined-basic" label="Course Leader" value={courseLeader} onChange ={(e)=>setLeader(e.target.value)} variant="outlined" />
 
                     <br />
+                    {/* Save Button */}
                     <Button type="submit" variant="contained" color="secondary"
                      onClick={()=>{
                         createCourse({ variables:{courseInput:{courseId,courseName,courseLeader}}});
@@ -165,9 +188,10 @@ function Courses(){
                             }
                         } 
                     style={{marginTop:5}}>
-                            Save
+                             Save 
                     </Button>
-                    <Button variant="contained" color="info" onClick={()=>{
+                    {/* Update Button */}
+                    <Button  variant="contained" color="info" onClick={()=>{
                             updateCourse({ variables:{courseUpdateInput:{courseId,courseName,courseLeader}}});
                             refetch();
                                 }
