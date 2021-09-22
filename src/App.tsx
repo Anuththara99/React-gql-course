@@ -3,7 +3,6 @@ import logo from './logo.svg';
 import './App.css';
 import { ApolloClient,ApolloProvider,HttpLink,InMemoryCache } from '@apollo/client';
 import Courses from './components/Courses';
-import AddCourse from './components/AddCourse'
 
 // //apollo client setup 
 // const client = new ApolloClient({
@@ -23,7 +22,6 @@ function App() {
       <div className="App">
         <h1>Apollo client</h1>
         <Courses />
-        {/* <AddCourse /> */}
       </div>
 
     </ApolloProvider>
