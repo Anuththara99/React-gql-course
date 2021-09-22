@@ -42,6 +42,19 @@ interface NewCourseVars{
     }
 }
 
+interface UpdateCourseData{
+    updateCourse:NewCourse[]
+}
+
+interface UpdateCourseVars{
+    courseUpdateInput :{
+        courseId:string;
+        courseName:string;
+        courseLeader:string;
+    }
+}
+
+//View all Courses Query
 const GET_ALL_COURSES = gql`
 query{
     allCourses{
@@ -53,6 +66,8 @@ query{
    
 `;
 
+//Create new Course Mutation
+
 const ADD_COURSE = gql`
 mutation createCourse($courseInput:CourseInput){
     createCourse(courseInput: $courseInput){
@@ -63,29 +78,34 @@ mutation createCourse($courseInput:CourseInput){
   }
 `;
 
+//update course Mutation
+const UPDATE_COURSE =gql `
+mutation($courseUpdateInput:CourseUpdateInput){
+    updateCourse(courseUpdateInput: $courseUpdateInput){
+      courseId
+      courseName
+      courseLeader
+    }
+  }
+`;
+
 
 
 function Courses(){
+    //for get view all courses
     const {loading,error,data,refetch} = useQuery<CourseData>(GET_ALL_COURSES);
 
     const [courseId, setId] = useState('');
     const [courseName, setName] = useState('');
     const [courseLeader, setLeader] = useState('');
 
-    const [createCourse] = useMutation<{createCourse:NewCourseData,course:NewCourseVars}>
+    //for create new course
+    const [createCourse] = useMutation<{createCourse:NewCourseData,courseInput:NewCourseVars}>
     (ADD_COURSE,{variables: { courseInput: { courseId, courseName, courseLeader } },refetchQueries :["allCourses"]});
 
-    // const handleAddCourses =(e : any)=>{
-    //     e.preventDefault();
-    //     console.log(createCourse)
-    //     createCourse({
-    //         variables: { course: 
-    //             { courseId:[courseId]
-    //             , courseName:[courseName]
-    //             , courseLeader :[courseLeader]
-    //         } }
-    //     })   
-    // }
+    //for update course
+    const [updateCourse] = useMutation<{updateCourse:UpdateCourseData,courseUpdateInput:UpdateCourseVars}>
+    (UPDATE_COURSE,{variables: { courseUpdateInput: { courseId, courseName, courseLeader } },refetchQueries :["allCourses"]})
 
 
     if(loading) return <p>loading...</p>;
@@ -95,27 +115,8 @@ function Courses(){
     return (
         <div>
             <div >
+                {/* Table */}
             <h3>Courses List</h3>
-            {/* <table style={{marginLeft:450,}}>
-                <thead>
-                    <tr>
-                         <th key="{course.courseId}">Course Id</th>
-                         <th>Course Name</th>
-                         <th>Course Leader</th>
-                    </tr>
-                    
-                </thead>
-                <tbody>
-                    {data && data.allCourses.map(course => (
-                    <tr>
-                        <td key="{course.courseId}">{course.courseId}</td>
-                        <td>{course.courseName}</td>
-                        <td>{course.courseLeader}</td>
-                    </tr>
-                    ))}
-                    
-                </tbody>
-            </table> */}
             <TableContainer component={Paper}>
             <Table size="small"  aria-label="a dense table">
                 <TableHead>
@@ -123,7 +124,6 @@ function Courses(){
                     <TableCell align="right">Course Id</TableCell>
                     <TableCell align="right">Course Name</TableCell>
                     <TableCell align="right">Course Leader</TableCell>
-                    <TableCell align="right">Update</TableCell>
                     <TableCell align="right">Delete</TableCell>
                 </TableRow>
                 </TableHead>
@@ -132,8 +132,10 @@ function Courses(){
                     <TableRow>
                         <TableCell align="right">{course.courseId}</TableCell>
                         <TableCell align="right">{course.courseName}</TableCell>
-                        <TableCell align="right">{course.courseName}</TableCell>
-                        <TableCell align="right"><Button variant="contained" color="info">Update</Button></TableCell>
+                        <TableCell align="right">{course.courseLeader}</TableCell>
+                        {/* <TableCell align="right">
+                            
+                        </TableCell> */}
                         <TableCell align="right"><Button variant="contained" color="warning">Delete</Button></TableCell>
 
                     </TableRow>
@@ -142,15 +144,14 @@ function Courses(){
             </Table>
         </TableContainer>
             </div>
-            
-            <div>
+            {/* form */}
+            <div style={{marginBottom:100}}>
                 <h3>
                     Add Course
                 </h3>
                 
                 <form >
-                    <Box  component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' },
-                }} noValidate autoComplete="off">
+                    <Box>
 
                     <TextField id="outlined-basic" label="Course Id" value={courseId} onChange ={(e)=>setId(e.target.value)} variant="outlined" />
                     <TextField id="outlined-basic" label="Course Name" value={courseName} onChange ={(e)=>setName(e.target.value)} variant="outlined" />
@@ -165,6 +166,13 @@ function Courses(){
                         } 
                     style={{marginTop:5}}>
                             Save
+                    </Button>
+                    <Button variant="contained" color="info" onClick={()=>{
+                            updateCourse({ variables:{courseUpdateInput:{courseId,courseName,courseLeader}}});
+                            refetch();
+                                }
+                            } style={{marginTop:5,marginLeft:10}}>
+                                Update
                     </Button>
                     
                 </Box>
