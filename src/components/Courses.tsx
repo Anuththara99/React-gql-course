@@ -192,7 +192,7 @@ function Courses(){
                         refetch();
                             }
                         } 
-                    style={{marginTop:5}}>
+                    style={{marginTop:5,padding:5}}>
                              Save 
                     </Button>
                     {/* Update Button */}
