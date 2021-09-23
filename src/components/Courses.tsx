@@ -112,15 +112,15 @@ function Courses(){
 
     // create new course
     const [createCourse] = useMutation<{createCourse:NewCourseData,courseInput:NewCourseVars}>
-    (ADD_COURSE,{variables: { courseInput: { courseId, courseName, courseLeader } },refetchQueries :["allCourses"]});
+    (ADD_COURSE,{variables: { courseInput: { courseId, courseName, courseLeader } },onCompleted:refetch,});
 
     // update course
     const [updateCourse] = useMutation<{updateCourse:UpdateCourseData,courseUpdateInput:UpdateCourseVars}>
-    (UPDATE_COURSE,{variables: { courseUpdateInput: { courseId, courseName, courseLeader } },refetchQueries :["allCourses"]})
+    (UPDATE_COURSE,{variables: { courseUpdateInput: { courseId, courseName, courseLeader } },onCompleted:refetch,})
 
     //delete course
     const [deleteCourse] = useMutation<{courseId:DeleteId}>
-    (DELETE_COURSE,{variables:{courseId:courseId},refetchQueries :["allCourses"]})
+    (DELETE_COURSE,{variables:{courseId:courseId},onCompleted:refetch,})
 
     if(loading) return <p>loading...</p>;
     if(error) return <p>Error..</p>;
@@ -152,7 +152,7 @@ function Courses(){
                             <IconButton aria-label="delete"
                            
                             onClick={()=>{deleteCourse({variables:{courseId:course.courseId}});
-                            refetch();
+                        
                                 }
                             }>
                                 <DeleteIcon/>
@@ -185,7 +185,7 @@ function Courses(){
                     <Button type="submit" variant="contained" color="secondary"
                      onClick={()=>{
                         createCourse({ variables:{courseInput:{courseId,courseName,courseLeader}}});
-                        refetch();
+                        
                             }
                         } 
                     style={{marginTop:5,padding:5}}>
@@ -194,7 +194,7 @@ function Courses(){
                     {/* Update Button */}
                     <Button  variant="contained" color="info" onClick={()=>{
                             updateCourse({ variables:{courseUpdateInput:{courseId,courseName,courseLeader}}});
-                            refetch();
+                            
                                 }
                             } style={{marginTop:5,marginLeft:10}}>
                                 Update
